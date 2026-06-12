@@ -1,0 +1,132 @@
+{
+  "CL": [
+    {
+      "strategy": "S6_PCA_Curve",
+      "product": "CL",
+      "n_trades": 14,
+      "total_pnl": 62835.593225175246,
+      "win_rate": 78.57142857142857,
+      "sharpe": 6.020787656933571,
+      "max_dd": 2216.326637136317,
+      "test_r2": -0.06594386844366529
+    },
+    {
+      "strategy": "S5_Bertram_OU",
+      "product": "CL",
+      "n_trades": 21,
+      "total_pnl": 78657.74016786693,
+      "win_rate": 80.95238095238095,
+      "sharpe": 5.02922243931354,
+      "max_dd": 2684.2597916666423,
+      "test_r2": 0.2862712200692491
+    },
+    {
+      "strategy": "S4_MLP_WTI",
+      "product": "CL",
+      "n_trades": 198,
+      "total_pnl": 4798.9223187616735,
+      "win_rate": 50.505050505050505,
+      "sharpe": 0.07794401350284816,
+      "max_dd": 27238.276313492057,
+      "test_r2": -0.020289855072463725
+    }
+  ],
+  "LCO": [
+    {
+      "strategy": "S6_PCA_Curve",
+      "product": "LCO",
+      "n_trades": 15,
+      "total_pnl": 22483.665329401712,
+      "win_rate": 53.333333333333336,
+      "sharpe": 1.0460485903798287,
+      "max_dd": 23074.376467876336,
+      "test_r2": -0.05529307005229822
+    },
+    {
+      "strategy": "S5_Bertram_OU",
+      "product": "LCO",
+      "n_trades": 20,
+      "total_pnl": -1548.994187086449,
+      "win_rate": 50.0,
+      "sharpe": -0.8201346501936833,
+      "max_dd": 2818.98118055553,
+      "test_r2": 0.025394274063495703
+    },
+    {
+      "strategy": "S2_WashU_Brent",
+      "product": "LCO",
+      "n_trades": 2,
+      "total_pnl": -6221.0369340659545,
+      "win_rate": 50.0,
+      "sharpe": -1.1284121234478584,
+      "max_dd": 0.0,
+      "test_r2": 0.0
+    }
+  ],
+  "HO": [
+    {
+      "strategy": "S6_PCA_Curve",
+      "product": "HO",
+      "n_trades": 15,
+      "total_pnl": 417.40752172077737,
+      "win_rate": 60.0,
+      "sharpe": 1.841556896268298,
+      "max_dd": 281.4941483333325,
+      "test_r2": -0.05198069860894128
+    },
+    {
+      "strategy": "S5_Bertram_OU",
+      "product": "HO",
+      "n_trades": 35,
+      "total_pnl": 11623.744985206067,
+      "win_rate": 97.14285714285714,
+      "sharpe": 3.3990015576860997,
+      "max_dd": 11.722866666666505,
+      "test_r2": 0.38707931928756323
+    },
+    {
+      "strategy": "S3_TwoFactor_Crack",
+      "product": "HO",
+      "n_trades": 7,
+      "total_pnl": 19903.203984037507,
+      "win_rate": 71.42857142857143,
+      "sharpe": 2.4566358654826654,
+      "max_dd": 11943.582444444448,
+      "test_r2": -1156.9112354691315
+    }
+  ],
+  "LGO": [
+    {
+      "strategy": "S6_PCA_Curve",
+      "product": "LGO",
+      "n_trades": 15,
+      "total_pnl": 99490.9402002371,
+      "win_rate": 66.66666666666666,
+      "sharpe": 3.335850131817531,
+      "max_dd": 18855.947916666817,
+      "test_r2": -0.15851923082466435
+    },
+    {
+      "strategy": "S5_Bertram_OU",
+      "product": "LGO",
+      "n_trades": 10,
+      "total_pnl": 16425.180036630853,
+      "win_rate": 50.0,
+      "sharpe": 0.18928294163837966,
+      "max_dd": 108935.74496336954,
+      "test_r2": -0.010315455479882552
+    }
+  ],
+  "WTCL": [
+    {
+      "strategy": "S1_HMM_OU_WTCL",
+      "product": "WTCL",
+      "n_trades": 12,
+      "total_pnl": 5899.200578981277,
+      "win_rate": 75.0,
+      "sharpe": 0.8750363551523528,
+      "max_dd": 14319.68557070642,
+      "test_r2": 0.17577315613469702
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "script_path": "C:/Users/ravis/Desktop/dsa/tools/train_rf_regime_percentile.py",
+  "results_path": "C:/Users/ravis/Desktop/dsa/tools/results/rf_regime_percentile_results.json",
+  "model_path": "C:/Users/ravis/Desktop/dsa/backend/data/rf_regime_percentile_model.joblib",
+  "horizon_days": 5,
+  "n_train": 956,
+  "n_val": 318,
+  "n_test": 320,
+  "train_accuracy": 0.885983,
+  "test_accuracy": 0.453125,
+  "baseline_persistence_accuracy": 0.80625,
+  "beats_baseline": false,
+  "delta_vs_baseline_pct": -35.3125,
+  "percentile_cutoffs": {
+    "20pct": -11.2,
+    "40pct": -7.753571,
+    "60pct": -5.204205,
+    "80pct": -3.111167
+  },
+  "per_regime_recall": {
+    "Quintile_1": 0.9265,
+    "Quintile_2": 0.0,
+    "Quintile_3": 0.1111,
+    "Quintile_4": 0.5227,
+    "Quintile_5": 0.3037
+  },
+  "feature_importances": [
+    {
+      "feature": "lagged_slope",
+      "importance": 0.362011
+    },
+    {
+      "feature": "curvature_lag",
+      "importance": 0.152705
+    },
+    {
+      "feature": "vol_20d",
+      "importance": 0.109577
+    },
+    {
+      "feature": "woy_sin",
+      "importance": 0.089668
+    },
+    {
+      "feature": "woy_cos",
+      "importance": 0.076164
+    },
+    {
+      "feature": "dxy_20d_change_pct",
+      "importance": 0.071892
+    },
+    {
+      "feature": "slope_20d_change",
+      "importance": 0.054294
+    },
+    {
+      "feature": "slope_5d_change",
+      "importance": 0.044541
+    },
+    {
+      "feature": "curvature_5d_change",
+      "importance": 0.039147
+    }
+  ],
+  "feature_columns": [
+    "lagged_slope",
+    "slope_5d_change",
+    "slope_20d_change",
+    "curvature_lag",
+    "curvature_5d_change",
+    "vol_20d",
+    "dxy_20d_change_pct",
+    "woy_sin",
+    "woy_cos"
+  ],
+  "regime_labels": [
+    "Quintile_1",
+    "Quintile_2",
+    "Quintile_3",
+    "Quintile_4",
+    "Quintile_5"
+  ],
+  "train_class_distribution": {
+    "Quintile_1": 192,
+    "Quintile_2": 191,
+    "Quintile_3": 191,
+    "Quintile_4": 191,
+    "Quintile_5": 191
+  },
+  "test_class_distribution": {
+    "Quintile_1": 68,
+    "Quintile_2": 8,
+    "Quintile_3": 9,
+    "Quintile_4": 44,
+    "Quintile_5": 191
+  },
+  "notes": "Percentile-based regime classifier. Slope cutoffs (20/40/60/80) fitted on TRAIN slope distribution only, then applied to TEST. Predicts today's quintile from 5-day-lagged features. Persistence baseline = label(slope from 5d ago) using the same train-fitted cutoffs."
+}

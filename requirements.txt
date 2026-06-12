@@ -1,0 +1,30 @@
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+httpx==0.28.1
+yfinance>=0.2.50
+huggingface_hub>=0.26.0
+vaderSentiment>=3.3.2
+# FinBERT (ProsusAI/finbert) for transformer-based news sentiment.
+# CPU-only torch to keep image size down on HF Spaces.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.0.0
+transformers>=4.40.0
+# WebSocket client for live AIS tanker positions (aisstream.io)
+websockets>=12.0
+# Regime-aware butterfly: LogisticRegression for regime classification +
+# Lasso for sparse factor weights per regime
+numpy>=1.26
+scikit-learn>=1.4
+# LightGBM as a tree-based comparison family in the P2B multi-model panel
+# alongside Linear/Ridge/Lasso/ElasticNet/Huber. Captures non-linearities
+# that linear models cannot.
+lightgbm>=4.0
+# HMM library for the paper-strategies engine (WTCL regime-switching).
+# Backend uses fitted state means/stds/transition; hmmlearn provides
+# the GaussianHMM offline training in tools/train_paper_strats.py.
+hmmlearn>=0.3
+# statsmodels for OU regression in tools/train_paper_strats.py.
+statsmodels>=0.14
+# pandas already pulled by yfinance; pinned here for the STL seasonality
+# computation in strategy_backtest.py
+pandas>=2.0

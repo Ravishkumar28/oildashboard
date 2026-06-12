@@ -1,0 +1,91 @@
+{
+  "script_path": "C:/Users/ravis/Desktop/dsa/tools/train_rf_regime.py",
+  "results_path": "C:/Users/ravis/Desktop/dsa/tools/results/rf_regime_results.json",
+  "model_path": "C:/Users/ravis/Desktop/dsa/backend/data/rf_regime_model.joblib",
+  "horizon_days": 5,
+  "n_train": 1033,
+  "n_val": 344,
+  "n_test": 345,
+  "test_accuracy": 0.614493,
+  "baseline_persistence_accuracy": 0.701449,
+  "beats_baseline": false,
+  "delta_vs_baseline_pct": -8.6957,
+  "per_regime_recall": {
+    "Backwardation": 0.869,
+    "Contango": 0.0,
+    "Flat": 0.0123,
+    "Steep Backwardation": 0.7522,
+    "Steep Contango": 0.0
+  },
+  "feature_importances": [
+    {
+      "feature": "lagged_slope",
+      "importance": 0.236159
+    },
+    {
+      "feature": "vol_20d",
+      "importance": 0.145248
+    },
+    {
+      "feature": "slope_20d_change",
+      "importance": 0.121259
+    },
+    {
+      "feature": "curvature_lag",
+      "importance": 0.116488
+    },
+    {
+      "feature": "woy_sin",
+      "importance": 0.111383
+    },
+    {
+      "feature": "dxy_20d_change_pct",
+      "importance": 0.089538
+    },
+    {
+      "feature": "woy_cos",
+      "importance": 0.089424
+    },
+    {
+      "feature": "slope_5d_change",
+      "importance": 0.048693
+    },
+    {
+      "feature": "curvature_5d_change",
+      "importance": 0.041808
+    }
+  ],
+  "feature_columns": [
+    "lagged_slope",
+    "slope_5d_change",
+    "slope_20d_change",
+    "curvature_lag",
+    "curvature_5d_change",
+    "vol_20d",
+    "dxy_20d_change_pct",
+    "woy_sin",
+    "woy_cos"
+  ],
+  "regime_labels": [
+    "Steep Backwardation",
+    "Backwardation",
+    "Flat",
+    "Contango",
+    "Steep Contango"
+  ],
+  "train_regime_counts": {
+    "Steep Backwardation": 702,
+    "Backwardation": 292,
+    "Flat": 32,
+    "Steep Contango": 4,
+    "Contango": 3
+  },
+  "test_regime_counts": {
+    "Backwardation": 145,
+    "Steep Backwardation": 113,
+    "Flat": 81,
+    "Contango": 4,
+    "Steep Contango": 2
+  },
+  "notes": "Predicts TODAY's regime from features lagged 5 trading days. Persistence baseline = label(slope from 5d ago). RF must beat this to add information beyond 'regime is sticky'."
+}

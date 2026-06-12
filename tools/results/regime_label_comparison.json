@@ -1,0 +1,143 @@
+{
+  "CL": {
+    "today_slope": -22.008,
+    "today_hard": "Steep Backwardation",
+    "today_pct": "Q1 (deepest back)",
+    "percentile_cutoffs": [
+      -9.267626262626258,
+      -5.790160714285724,
+      -3.919098039215689,
+      -2.4077818181818094
+    ],
+    "n_days": 1747,
+    "hard_distribution_pct": {
+      "Flat": 6.7,
+      "Backwardation": 33.7,
+      "Steep Backwardation": 58.7,
+      "Contango": 0.5,
+      "Steep Contango": 0.4
+    },
+    "pct_distribution_pct": {
+      "Q5 (deepest contango)": 20.0,
+      "Q4": 20.0,
+      "Q3 (middle)": 20.0,
+      "Q2": 20.0,
+      "Q1 (deepest back)": 20.0
+    },
+    "agreement_pct": 20.4,
+    "hard_stickiness_days": 7.7,
+    "pct_stickiness_days": 4.4
+  },
+  "LCO": {
+    "today_slope": -23.364,
+    "today_hard": "Steep Backwardation",
+    "today_pct": "Q1 (deepest back)",
+    "percentile_cutoffs": [
+      -9.246475331564985,
+      -5.6495999999999995,
+      -3.9606666666666825,
+      -2.4991878787878896
+    ],
+    "n_days": 1572,
+    "hard_distribution_pct": {
+      "Flat": 5.1,
+      "Backwardation": 35.1,
+      "Steep Backwardation": 59.5,
+      "Steep Contango": 0.2,
+      "Contango": 0.1
+    },
+    "pct_distribution_pct": {
+      "Q5 (deepest contango)": 20.0,
+      "Q4": 20.0,
+      "Q2": 20.0,
+      "Q3 (middle)": 20.0,
+      "Q1 (deepest back)": 20.0
+    },
+    "agreement_pct": 20.2,
+    "hard_stickiness_days": 9.8,
+    "pct_stickiness_days": 5.3
+  },
+  "LGO": {
+    "today_slope": -341.03,
+    "today_hard": "Steep Backwardation",
+    "today_pct": "Q1 (deepest back)",
+    "percentile_cutoffs": [
+      -145.88500000000005,
+      -65.33629370629369,
+      -34.290512820512824,
+      -13.079038963065361
+    ],
+    "n_days": 1570,
+    "hard_distribution_pct": {
+      "Steep Contango": 4.5,
+      "Contango": 1.4,
+      "Flat": 1.2,
+      "Backwardation": 2.4,
+      "Steep Backwardation": 90.4
+    },
+    "pct_distribution_pct": {
+      "Q5 (deepest contango)": 20.0,
+      "Q4": 20.0,
+      "Q3 (middle)": 20.0,
+      "Q2": 20.0,
+      "Q1 (deepest back)": 20.0
+    },
+    "agreement_pct": 24.5,
+    "hard_stickiness_days": 20.7,
+    "pct_stickiness_days": 8.3
+  },
+  "HO": {
+    "today_slope": -1.056,
+    "today_hard": "Backwardation",
+    "today_pct": "Q1 (deepest back)",
+    "percentile_cutoffs": [
+      -0.4977614285714284,
+      -0.2122033333333334,
+      -0.10871533333333314,
+      -0.03833999999999999
+    ],
+    "n_days": 1734,
+    "hard_distribution_pct": {
+      "Flat": 93.0,
+      "Backwardation": 7.0
+    },
+    "pct_distribution_pct": {
+      "Q5 (deepest contango)": 20.0,
+      "Q4": 20.0,
+      "Q3 (middle)": 20.0,
+      "Q2": 20.0,
+      "Q1 (deepest back)": 20.0
+    },
+    "agreement_pct": 20.0,
+    "hard_stickiness_days": 43.4,
+    "pct_stickiness_days": 5.9
+  },
+  "WTCL": {
+    "today_slope": 3.921,
+    "today_hard": "Contango",
+    "today_pct": "Q5 (deepest contango)",
+    "percentile_cutoffs": [
+      -0.5729999999999997,
+      -0.15043213344033057,
+      0.18806666666666708,
+      0.7360324929971999
+    ],
+    "n_days": 1638,
+    "hard_distribution_pct": {
+      "Flat": 75.2,
+      "Contango": 14.0,
+      "Backwardation": 8.9,
+      "Steep Contango": 1.9
+    },
+    "pct_distribution_pct": {
+      "Q3 (middle)": 20.0,
+      "Q4": 20.0,
+      "Q2": 20.0,
+      "Q1 (deepest back)": 20.0,
+      "Q5 (deepest contango)": 20.0
+    },
+    "agreement_pct": 21.9,
+    "hard_stickiness_days": 11.3,
+    "pct_stickiness_days": 4.6
+  }
+}
