@@ -1,0 +1,37 @@
+{
+  "CL": {
+    "model": "LGBM",
+    "mean_test_r2": -0.1298,
+    "n_wins_by_this_model": 6,
+    "n_total_targets": 25,
+    "share_of_wins": 0.24
+  },
+  "HO": {
+    "model": "Huber",
+    "mean_test_r2": 0.0881,
+    "n_wins_by_this_model": 7,
+    "n_total_targets": 26,
+    "share_of_wins": 0.269
+  },
+  "LCO": {
+    "model": "LGBM",
+    "mean_test_r2": -13.5176,
+    "n_wins_by_this_model": 14,
+    "n_total_targets": 31,
+    "share_of_wins": 0.452
+  },
+  "LGO": {
+    "model": "SVR_Poly",
+    "mean_test_r2": -1.5222,
+    "n_wins_by_this_model": 11,
+    "n_total_targets": 33,
+    "share_of_wins": 0.333
+  },
+  "WTCL": {
+    "model": "SVR_Linear",
+    "mean_test_r2": -0.1524,
+    "n_wins_by_this_model": 6,
+    "n_total_targets": 23,
+    "share_of_wins": 0.261
+  }
+}

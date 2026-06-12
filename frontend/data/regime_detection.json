@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-05-20",
+  "verdict": {
+    "winner": "HMM",
+    "summary": "Hidden Markov Models give persistent, tradeable regime states. GMM relabels too aggressively (LGO: 91 switches, WTCL: 277 switches across ~1,550 days = quasi-weekly flips - that's noise, not regime). KMeans has the highest silhouette score because it optimizes cluster tightness in feature space, but it ignores time entirely so its labels flicker. Regime work needs persistence: use HMM."
+  },
+  "products": {
+    "LGO": {
+      "name": "Gasoil (LGO)",
+      "n": 1550,
+      "date_range": "2021-02-01 to 2026-05-20",
+      "metrics": {
+        "HMM":    {"silhouette": 0.0142, "switches":  24, "persistence": 0.9833, "loglik": -4394.0},
+        "GMM":    {"silhouette": 0.2483, "switches":  91, "bic": 11483.0},
+        "KMeans": {"silhouette": 0.5823, "switches":  49}
+      },
+      "hmm_states": {
+        "0": {"share": 0.352, "ret": 0.00020, "vol20": 0.01584, "spread":  11.99, "label": "Calm contango",      "color": "#5ec8d8"},
+        "1": {"share": 0.310, "ret": 0.00127, "vol20": 0.03634, "spread": 214.42, "label": "High-vol stress",    "color": "#e2616b"},
+        "2": {"share": 0.339, "ret": 0.00158, "vol20": 0.01779, "spread":  62.90, "label": "Calm backwardation", "color": "#e0b34a"}
+      },
+      "current_state_idx": 1,
+      "current_price": 1187.33,
+      "price_unit": "$/ton",
+      "contract_size_units": 100,
+      "asset_label": "ICE Gasoil M1",
+      "seasonality": {
+        "strength": 0.097,
+        "monthly": [-11.29, -26.06, 111.14, 116.61, 27.23, -41.53, -16.16, -41.29, -42.73, 8.85, 0.03, -55.85]
+      }
+    },
+    "WTCL": {
+      "name": "WTI-Brent Spread",
+      "n": 1619,
+      "date_range": "2021-01-26 to 2026-05-12",
+      "metrics": {
+        "HMM":    {"silhouette": 0.2472, "switches":  61, "persistence": 0.9547, "loglik": -5424.4},
+        "GMM":    {"silhouette": 0.3442, "switches": 277, "bic": 12915.7},
+        "KMeans": {"silhouette": 0.5590, "switches": 119}
+      },
+      "hmm_states": {
+        "0": {"share": 0.545, "ret": 0.00170, "vol20": 0.04245, "spread": -0.058, "label": "Calm / steady",       "color": "#5ec8d8"},
+        "1": {"share": 0.225, "ret": 0.01453, "vol20": 0.13837, "spread":  0.792, "label": "High-vol rally",      "color": "#e2616b"},
+        "2": {"share": 0.230, "ret": 0.00288, "vol20": 0.08720, "spread": -1.593, "label": "Wide-Brent dislocation", "color": "#e0b34a"}
+      },
+      "current_state_idx": 2,
+      "current_price": -9.73,
+      "price_unit": "$/bbl",
+      "contract_size_units": 1000,
+      "asset_label": "WTI-Brent M1 spread",
+      "seasonality": {
+        "strength": 0.104,
+        "monthly": [0.14, -0.44, -1.25, -1.54, -0.51, 0.69, 0.72, 0.40, 0.18, 0.36, 0.31, 0.37]
+      }
+    }
+  },
+  "indicators": ["log-return", "20d realized vol", "M1-M12 spread", "fly (M3-2M6+M9)"],
+  "method_notes": {
+    "HMM":    "Hidden Markov Model with Gaussian emissions. Models the state SEQUENCE so transitions are penalized, giving persistent regimes. Persistence ≈ Pr(state[t+1] = state[t]).",
+    "GMM":    "Gaussian Mixture Model. Probabilistic clustering in feature space, no time dependence. Switches every time features wander between cluster boundaries.",
+    "KMeans": "Hard clustering by Euclidean distance. Highest silhouette because it optimizes cluster tightness, but ignores time entirely."
+  }
+}

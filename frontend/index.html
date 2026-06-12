@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Oil Trading Desk — Live Dashboard</title>
+<link rel="stylesheet" href="/style.css?v=20260610e-we-flag" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ===== ZONE 1 — Overview (header bar + 9 key numbers) ===== -->
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">◆</span>
+    <div>
+      <h1>OIL TRADING DESK</h1>
+      <span class="tagline">Live crude · products · freight · macro</span>
+    </div>
+  </div>
+  <div class="conn">
+    <span id="dot" class="dot"></span>
+    <span id="connText">connecting…</span>
+    <span id="clock" class="clock"></span>
+    <button id="themeToggle" class="theme-toggle"
+            title="Toggle light/dark theme (TradingView widgets stay dark — their theme is baked into the embed at page load)">☼ Theme</button>
+  </div>
+</header>
+
+<section id="keynums" class="keynums"><!-- filled by JS --></section>
+
+<!-- Composite bull/bear indicator — single-glance directional read -->
+<section id="composite" class="composite-signal">
+  <div class="cs-head">
+    <div class="cs-label">
+      <div class="cs-title">COMPOSITE OIL SIGNAL</div>
+      <div id="csLabel" class="cs-verdict">—</div>
+    </div>
+    <div class="cs-gauge">
+      <div class="cs-bar">
+        <div class="cs-zones">
+          <span class="cz cz-strongbear">Strongly Bearish</span>
+          <span class="cz cz-bear">Bearish</span>
+          <span class="cz cz-neutral">Neutral</span>
+          <span class="cz cz-bull">Bullish</span>
+          <span class="cz cz-strongbull">Strongly Bullish</span>
+        </div>
+        <div id="csPointer" class="cs-pointer"></div>
+      </div>
+      <div class="cs-scoreline">
+        <span>−100</span><span>−50</span>
+        <span id="csScore" class="cs-score">0</span>
+        <span>+50</span><span>+100</span>
+      </div>
+    </div>
+  </div>
+  <div class="cs-buckets">
+    <div class="cs-bucket"><div class="cb-head"><span>Technical</span><b id="csTechScore">—</b></div>
+      <ul id="csTechDrivers" class="cb-drivers"></ul></div>
+    <div class="cs-bucket"><div class="cb-head"><span>Fundamentals</span><b id="csFundScore">—</b></div>
+      <ul id="csFundDrivers" class="cb-drivers"></ul></div>
+    <div class="cs-bucket"><div class="cb-head"><span>News</span><b id="csNewsScore">—</b></div>
+      <ul id="csNewsDrivers" class="cb-drivers"></ul></div>
+  </div>
+</section>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="main">▤ Main Dashboard</button>
+  <button class="tab-btn" data-tab="pro">⚙ Pro Tools · TradingView · Spread Matrix · Analysts</button>
+</nav>
+
+<main class="grid tab-content active" id="tab-main">
+
+  <!-- ─────────── ZONE 2 — REAL-TIME PRICES ─────────── -->
+  <div class="zone-divider">▸ Real-time prices · what's trading right now</div>
+
+  <!-- 01 Price chart + moving averages -->
+  <article class="panel span2">
+    <div class="phead"><span class="num">01</span><h2>Price Chart &amp; Moving Averages</h2>
+      <span id="priceSrc" class="tag mini">—</span>
+      <span id="priceTrend" class="tag">—</span></div>
+    <div class="chartwrap"><canvas id="priceChart"></canvas></div>
+  </article>
+
+  <!-- 02 Bollinger Bands - WTI -->
+  <article class="panel">
+    <div class="phead"><span class="num">02</span><h2>Bollinger Bands · WTI (20, 2σ)</h2></div>
+    <div class="rsi-readout"><span id="bbPos">—</span>
+      <span id="bbState" class="tag">—</span></div>
+    <div class="stats3">
+      <div><b id="bbUpper">—</b><span>upper</span></div>
+      <div><b id="bbMid">—</b><span>middle</span></div>
+      <div><b id="bbLower">—</b><span>lower</span></div>
+    </div>
+    <div class="chartwrap sm"><canvas id="bbChart"></canvas></div>
+  </article>
+
+  <!-- 02B Bollinger Bands - Brent -->
+  <article class="panel">
+    <div class="phead"><span class="num">02B</span><h2>Bollinger Bands · Brent (20, 2σ)</h2></div>
+    <div class="rsi-readout"><span id="bbBrentPos">—</span>
+      <span id="bbBrentState" class="tag">—</span></div>
+    <div class="stats3">
+      <div><b id="bbBrentUpper">—</b><span>upper</span></div>
+      <div><b id="bbBrentMid">—</b><span>middle</span></div>
+      <div><b id="bbBrentLower">—</b><span>lower</span></div>
+    </div>
+    <div class="chartwrap sm"><canvas id="bbBrentChart"></canvas></div>
+  </article>
+
+  <!-- 02C Bollinger Bands - RBOB Gasoline -->
+  <article class="panel">
+    <div class="phead"><span class="num">02C</span><h2>Bollinger Bands · RBOB Gasoline (20, 2σ)</h2></div>
+    <div class="rsi-readout"><span id="bbRbobPos">—</span>
+      <span id="bbRbobState" class="tag">—</span></div>
+    <div class="stats3">
+      <div><b id="bbRbobUpper">—</b><span>upper $/gal</span></div>
+      <div><b id="bbRbobMid">—</b><span>middle $/gal</span></div>
+      <div><b id="bbRbobLower">—</b><span>lower $/gal</span></div>
+    </div>
+    <div class="chartwrap sm"><canvas id="bbRbobChart"></canvas></div>
+  </article>
+
+  <!-- 02D Bollinger Bands - Heating Oil -->
+  <article class="panel">
+    <div class="phead"><span class="num">02D</span><h2>Bollinger Bands · Heating Oil (20, 2σ)</h2></div>
+    <div class="rsi-readout"><span id="bbHeatPos">—</span>
+      <span id="bbHeatState" class="tag">—</span></div>
+    <div class="stats3">
+      <div><b id="bbHeatUpper">—</b><span>upper $/gal</span></div>
+      <div><b id="bbHeatMid">—</b><span>middle $/gal</span></div>
+      <div><b id="bbHeatLower">—</b><span>lower $/gal</span></div>
+    </div>
+    <div class="chartwrap sm"><canvas id="bbHeatChart"></canvas></div>
+  </article>
+
+  <!-- 02E Gas Oil note: no free ICE feed -->
+  <article class="panel sim">
+    <div class="phead"><span class="num">02E</span><h2>Bollinger Bands · Gas Oil</h2><span class="tag mini">no real series</span></div>
+    <p class="hint" style="margin-top:14px">ICE Gas Oil (LGO) has no free Yahoo/datafeed equivalent —
+      computing BB on the synthetic header estimate would be misleading.
+      The Gas Oil header tile is derived from HO + a fixed spread, not a real series.</p>
+  </article>
+
+  <!-- ─────────── ZONE 3 — MARKET STRUCTURE ─────────── -->
+  <div class="zone-divider">▸ Market structure · spreads, curves, correlations</div>
+
+  <!-- 03 WTI-Brent Spread -->
+  <article class="panel">
+    <div class="phead"><span class="num">03</span><h2>WTI–Brent Spread</h2>
+      <span id="spreadTag" class="tag">—</span></div>
+    <div class="stats3">
+      <div><b id="spVal">—</b><span>current spread</span></div>
+      <div><b id="spMean">—</b><span>120d mean</span></div>
+      <div><b id="spZ">—</b><span>z-score</span></div>
+    </div>
+    <div class="chartwrap sm"><canvas id="spreadChart"></canvas></div>
+  </article>
+
+  <!-- 04 Futures Curve -->
+  <article class="panel">
+    <div class="phead"><span class="num">04</span><h2>Futures Curve — 12 Months</h2>
+      <span id="curveSrc" class="tag mini">—</span>
+      <span id="curveTag" class="tag">—</span></div>
+    <div class="stats3">
+      <div><b id="m12">—</b><span>12M vs spot</span></div>
+      <div><b id="carry">—</b><span>$/bbl per month</span></div>
+      <div><b id="spotV">—</b><span>spot</span></div>
+    </div>
+    <div class="chartwrap sm"><canvas id="futChart"></canvas></div>
+  </article>
+
+  <!-- 04B Regime-Aware Butterfly (Lasso/Huber per regime + LogReg classifier) -->
+  <article class="panel span2"><div class="phead">
+    <span class="num">04B</span>
+    <h2>Regime-Aware Butterfly Signal — Lasso/Huber ⨯ LogReg</h2>
+    <span id="regimeFitStatus" class="tag mini">—</span>
+    <span id="regimeWinner"    class="tag mini">—</span>
+    <span id="regimeAction" class="tag">—</span></div>
+    <div class="stats3">
+      <div><b id="regimeName">—</b><span>current regime · M12−M1 slope</span></div>
+      <div><b id="regimeFlyNow">—</b><span>current fly $ · z-score</span></div>
+      <div><b id="regimeFlyPred">—</b><span>model-predicted next fly</span></div>
+    </div>
+    <p id="regimeRationale" class="hint" style="margin-top:8px">—</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px">
+      <div>
+        <div class="kl" style="margin-bottom:4px">Regime probability (LogReg softmax)</div>
+        <div id="regimeProbBars"></div>
+      </div>
+      <div>
+        <div class="kl" style="margin-bottom:4px" id="regimeWeightsHead">Factor weights for this regime</div>
+        <div id="regimeLassoWeights"></div>
+      </div>
+    </div>
+    <div class="kl" style="margin-top:10px; margin-bottom:4px">Per-regime model winner (in-sample R² fit-off)</div>
+    <div id="regimePerWinner" class="regime-perwinner"><!-- filled by JS --></div>
+    <p class="hint" style="margin-top:8px">
+      Curve regime classified by the slope (M12 − M1): &lt;−4 Steep Backwardation,
+      −4 to −1 Backwardation, ±1 Flat, +1 to +4 Contango, &gt;+4 Steep Contango.
+      <b>LogisticRegression</b> turns hard rule into smooth probability so you
+      see borderline cases. Per regime, the engine fits both <b>Lasso (α=0.05)</b>
+      and <b>Huber (ε=1.35)</b> on the same features (BB · crack · DXY · WTI
+      return · inv-z · fly) → next-tick fly, then keeps whichever wins on
+      in-sample R². Lasso wins when residuals are clean and the task is
+      feature selection. Huber wins when residuals are fat-tailed — the
+      empirical norm for spreads/flies (rolls, refinery shocks, weather).
+      Recommendation combines current z-score with the winning model's
+      predicted change.
+    </p>
+  </article>
+
+  <!-- 05 WTI · Dollar Correlation -->
+  <article class="panel">
+    <div class="phead"><span class="num">05</span><h2>WTI · Dollar Correlation</h2>
+      <span id="dxySrc" class="tag mini">—</span></div>
+    <div class="stats3">
+      <div><b id="corrVal">—</b><span>90d correlation</span></div>
+      <div><b id="covVal">—</b><span>covariance (bp²)</span></div>
+      <div><b id="explVal">—</b><span>move from USD</span></div>
+    </div>
+    <div class="chartwrap sm"><canvas id="dxyChart"></canvas></div>
+  </article>
+
+  <!-- 06 Crack Spreads (span 2) -->
+  <article class="panel span2">
+    <div class="phead"><span class="num">06</span><h2>Crack Spreads &amp; Z-Score Panel</h2>
+      <span id="cracksSrc" class="tag mini">—</span></div>
+    <div id="cracks" class="cracks"><!-- filled by JS --></div>
+  </article>
+
+  <!-- 07 Freight Rates BDTI (simulated) -->
+  <article class="panel sim">
+    <div class="phead"><span class="num">07</span><h2>Freight Rates — BDTI</h2>
+      <span id="freightSrc" class="tag mini">—</span></div>
+    <div class="stats3">
+      <div><b id="bdtiVal">—</b><span>index level</span></div>
+      <div><b id="bdtiAvg">—</b><span>90d average</span></div>
+      <div><b id="bdtiRel">—</b><span>vs average</span></div>
+    </div>
+    <div class="chartwrap sm"><canvas id="freightChart"></canvas></div>
+  </article>
+
+  <!-- 08 Spread Covariance Matrix (full width) -->
+  <article class="panel span3">
+    <div class="phead"><span class="num">08</span><h2>Spread Covariance Matrix (EWMA λ=0.94)</h2></div>
+    <div id="covmatrix" class="covwrap"><!-- filled by JS --></div>
+    <p class="hint">Exponentially-weighted correlation of returns (RiskMetrics
+      convention). Recent observations weighted ~6× heavier than 30 days ago,
+      so the matrix responds to current regime instead of a flat 4-month
+      window. Hot cells = positions that move together (concentrated risk).</p>
+  </article>
+
+  <!-- ─────────── ZONE 4 — MACRO DRIVERS ─────────── -->
+  <div class="zone-divider">▸ Macro drivers · weekly fundamentals from EIA</div>
+
+  <!-- 09 Fundamentals Strip (full width) -->
+  <article class="panel span3">
+    <div class="phead"><span class="num">09</span><h2>Fundamentals Strip</h2>
+      <span id="fundSrc" class="tag mini">—</span></div>
+    <div id="fundamentals" class="funds"><!-- filled by JS --></div>
+  </article>
+
+  <!-- 10 CFTC COT Positioning (full width) -->
+  <article class="panel span3">
+    <div class="phead"><span class="num">10</span><h2>CFTC Commitment of Traders — NYMEX WTI</h2>
+      <span id="cotDate" class="tag mini">—</span>
+      <span id="cotSrc" class="tag mini">—</span></div>
+    <div id="cot" class="funds"><!-- filled by JS --></div>
+    <p class="hint">Net = long minus short contracts (1 contract = 1,000 bbl).
+      Managed Money = hedge funds / speculators. Producers/Commercials =
+      physical hedgers. WoW = week-over-week change. Published Fridays for
+      prior Tuesday's positions.</p>
+  </article>
+
+  <!-- US Manufacturing Health (PMI proxy via FRED) (full width) -->
+  <article class="panel span3">
+    <div class="phead"><span class="num">PMI</span><h2>US Manufacturing Health — PMI Proxy (FRED Regional Fed Surveys)</h2>
+      <span id="pmiCompositeTag" class="tag">—</span>
+      <span id="pmiSrc" class="tag mini">—</span></div>
+    <div class="pmi-head">
+      <div><b id="pmiComposite">—</b><span>Regional Fed composite (50 = neutral)</span></div>
+      <div><b id="pmiCompDelta">—</b><span>vs last month</span></div>
+      <div><b id="pmiCompState">—</b><span>state</span></div>
+      <div><b id="pmiNSurveys">—</b><span>surveys included</span></div>
+    </div>
+    <div id="pmiCards" class="funds"><!-- filled by JS --></div>
+    <p class="hint">ISM Manufacturing PMI itself is paywalled (ISM stopped
+      licensing it to FRED around 2018). This panel shows the closest free
+      public proxy: a composite of <b>five Federal Reserve regional
+      manufacturing surveys</b> (NY Empire State, Philly, Richmond, Dallas,
+      Kansas City) plus broad national Industrial Production and Capacity
+      Utilization. The regional Fed composite correlates ~0.85 with real
+      ISM PMI and is typically <i>released BEFORE ISM each month</i> —
+      leading-of-the-leading indicator. For oil: manufacturing expansion =
+      higher diesel + industrial energy demand = bullish crude.</p>
+  </article>
+
+  <!-- STEO Global Oil Balance (full width) -->
+  <article class="panel span3">
+    <div class="phead"><span class="num">STEO</span><h2>Global Oil Balance — EIA Short-Term Energy Outlook</h2>
+      <span id="steoPeriod" class="tag mini">—</span>
+      <span id="steoSrc" class="tag mini">—</span>
+      <span id="steoFwdTag" class="tag">—</span></div>
+    <div class="steo-stats">
+      <div><b id="steoSupply">—</b><span>world supply (M bpd)</span></div>
+      <div><b id="steoDemand">—</b><span>world demand (M bpd)</span></div>
+      <div><b id="steoBalance">—</b><span>implied balance (M bpd)</span></div>
+      <div><b id="steoFwd6">—</b><span>fwd 6M avg balance</span></div>
+      <div><b id="steoFwd12">—</b><span>fwd 12M avg balance</span></div>
+    </div>
+    <div class="steo-breakdown">
+      <div><span>OPEC supply</span> <b id="steoOpec">—</b></div>
+      <div><span>Non-OPEC supply</span> <b id="steoNonOpec">—</b></div>
+      <div><span>OECD demand</span> <b id="steoOecd">—</b></div>
+      <div><span>Non-OECD demand</span> <b id="steoNonOecd">—</b></div>
+    </div>
+    <div class="chartwrap"><canvas id="steoChart"></canvas></div>
+    <p class="hint">EIA's monthly global balance (published ~10th of each
+      month, ~18mo forecast horizon). Supply &gt; demand → surplus → stocks
+      build → bearish prices. Supply &lt; demand → deficit → stocks draw →
+      bullish prices. This is the benchmark global balance every analyst
+      reads alongside IEA's Oil Market Report. Solid bars = historical,
+      hatched bars = STEO forecast.</p>
+  </article>
+
+  <!-- ─────────── ZONE 5 — TRADING LAYER ─────────── -->
+  <div class="zone-divider">▸ Trading layer · signals, paper P&amp;L, news context</div>
+
+  <!-- 11 Trade Signals (span 2) -->
+  <article class="panel span2">
+    <div class="phead"><span class="num">11</span><h2>Trade Signals</h2></div>
+    <div id="signals" class="signals"><!-- filled by JS --></div>
+  </article>
+
+  <!-- 12 5-Year Week Range -->
+  <article class="panel">
+    <div class="phead"><span class="num">12</span><h2>5-Year Week Range</h2>
+      <span id="fySrc" class="tag mini">—</span>
+      <span id="fyTag" class="tag">—</span></div>
+    <div class="chartwrap sm"><canvas id="fyChart"></canvas></div>
+    <p id="fyNote" class="hint">—</p>
+  </article>
+
+  <!-- 13 Paper Trading Performance (full width) -->
+  <article class="panel span3">
+    <div class="phead"><span class="num">13</span><h2>Paper Trading Performance</h2>
+      <span class="tag mini">virtual $100k · auto-trades dashboard signals</span>
+      <span id="paperResetAt" class="tag mini"></span>
+      <span id="paperPct" class="tag">—</span></div>
+    <div class="paperhead">
+      <div><b id="paperEquity">—</b><span>account equity</span></div>
+      <div><b id="paperRealized">—</b><span>realized P&amp;L</span></div>
+      <div><b id="paperUnreal">—</b><span>unrealized (open)</span></div>
+      <div><b id="paperTrades">—</b><span>closed trades</span></div>
+      <div><b id="paperWinRate">—</b><span>win rate</span></div>
+    </div>
+    <div class="papergrid">
+      <div class="paperblock">
+        <h3>Open Positions</h3>
+        <div id="paperOpen" class="paperlist"><!-- filled by JS --></div>
+      </div>
+      <div class="paperblock">
+        <h3>Recent Closed Trades</h3>
+        <div id="paperClosed" class="paperlist"><!-- filled by JS --></div>
+      </div>
+      <div class="paperblock">
+        <h3>Equity Curve</h3>
+        <div class="chartwrap sm"><canvas id="equityChart"></canvas></div>
+      </div>
+    </div>
+    <div class="paper-tracksection">
+      <h3>Track Record by Strategy Source</h3>
+      <div id="paperBySource" class="paper-bysource"><!-- filled by JS --></div>
+      <div class="paper-tablehead">Full closed-trade log (last 50)</div>
+      <div id="paperTrackTable" class="paper-tracktable"><!-- filled by JS --></div>
+    </div>
+  </article>
+
+  <!-- 14 Live News Feed (full width) -->
+  <article class="panel span3">
+    <div class="phead"><span class="num">14</span><h2>Live News Feed</h2>
+      <span id="newsSrc" class="tag mini">—</span>
+      <span id="newsMood" class="tag">—</span>
+      <span id="newsMoodBreakdown" class="tag mini">—</span>
+      <span id="finbertStatus" class="tag mini">FinBERT: loading…</span></div>
+    <div class="newslayout">
+      <div id="newsRegions" class="regions"><!-- region filter chips --></div>
+      <div id="news" class="newsfeed"><!-- filled by JS --></div>
+    </div>
+  </article>
+
+</main>
+
+<!-- ═══════════════════ PRO TOOLS TAB ═══════════════════ -->
+<main class="grid tab-content" id="tab-pro">
+
+  <div class="zone-divider">▸ TradingView live charts · real-time CFD prices</div>
+
+  <article class="panel"><div class="phead"><span class="num">T1</span><h2>WTI Crude (Live)</h2><span class="tag mini">TVC:USOIL</span></div>
+    <div class="tv-wrap"><div class="tradingview-widget-container"><div class="tradingview-widget-container__widget" style="height:300px"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+      {"autosize":true,"symbol":"TVC:USOIL","interval":"60","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","toolbar_bg":"#0a0e14","hide_top_toolbar":true,"save_image":false,"hide_legend":false}
+      </script></div></div></article>
+
+  <article class="panel"><div class="phead"><span class="num">T2</span><h2>Brent Crude (Live)</h2><span class="tag mini">TVC:UKOIL</span></div>
+    <div class="tv-wrap"><div class="tradingview-widget-container"><div class="tradingview-widget-container__widget" style="height:300px"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+      {"autosize":true,"symbol":"TVC:UKOIL","interval":"60","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","toolbar_bg":"#0a0e14","hide_top_toolbar":true,"save_image":false}
+      </script></div></div></article>
+
+  <article class="panel"><div class="phead"><span class="num">T3</span><h2>WTI-Brent Spread</h2><span class="tag mini">TVC:USOIL−TVC:UKOIL</span></div>
+    <div class="tv-wrap"><div class="tradingview-widget-container"><div class="tradingview-widget-container__widget" style="height:300px"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+      {"autosize":true,"symbol":"TVC:USOIL-TVC:UKOIL","interval":"D","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","toolbar_bg":"#0a0e14","hide_top_toolbar":true,"save_image":false}
+      </script></div></div></article>
+
+  <article class="panel"><div class="phead"><span class="num">T4</span><h2>Gasoline ETF Proxy (Live)</h2><span class="tag mini">AMEX:UGA · tracks RBOB futures</span></div>
+    <div class="tv-wrap"><div class="tradingview-widget-container"><div class="tradingview-widget-container__widget" style="height:300px"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+      {"autosize":true,"symbol":"AMEX:UGA","interval":"60","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","toolbar_bg":"#0a0e14","hide_top_toolbar":true,"save_image":false}
+      </script></div></div></article>
+
+  <article class="panel"><div class="phead"><span class="num">T5</span><h2>Heating Oil (Live)</h2><span class="tag mini">AMEX:UHN · tracks NYMEX HO</span></div>
+    <div class="tv-wrap"><div class="tradingview-widget-container"><div class="tradingview-widget-container__widget" style="height:300px"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+      {"autosize":true,"symbol":"AMEX:UHN","interval":"60","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","toolbar_bg":"#0a0e14","hide_top_toolbar":true,"save_image":false}
+      </script></div></div></article>
+
+  <article class="panel"><div class="phead"><span class="num">T6</span><h2>Natural Gas (Live)</h2><span class="tag mini">TVC:NGAS · energy adjacent</span></div>
+    <div class="tv-wrap"><div class="tradingview-widget-container"><div class="tradingview-widget-container__widget" style="height:300px"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+      {"autosize":true,"symbol":"TVC:NGAS","interval":"60","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","toolbar_bg":"#0a0e14","hide_top_toolbar":true,"save_image":false}
+      </script></div></div></article>
+
+  <div class="zone-divider">▸ Product terminals · real Yahoo numeric + TradingView chart per refined product</div>
+
+  <article class="panel"><div class="phead"><span class="num">T6A</span><h2>RBOB Gasoline Terminal</h2><span class="tag mini">NYMEX RB price + AMEX:UGA chart</span></div>
+    <div class="product-tile">
+      <div class="pt-price-row">
+        <div><b id="rbobPrice">—</b><span>NYMEX RB front-month (real Yahoo)</span></div>
+        <div><b id="rbobAnchor">—</b><span>Yahoo anchor</span></div>
+      </div>
+      <div id="rbobSrc" class="pt-src">—</div>
+    </div>
+    <div class="tv-wrap"><div class="tradingview-widget-container"><div class="tradingview-widget-container__widget" style="height:280px"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+      {"autosize":true,"symbol":"AMEX:UGA","interval":"60","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","toolbar_bg":"#0a0e14","hide_top_toolbar":true,"save_image":false}
+      </script></div></div>
+    <p class="hint">Number above = real NYMEX RB front-month futures price (yfinance RB=F).
+      Chart below = AMEX:UGA Gasoline ETF (free TradingView feed, tracks RBOB futures
+      tightly within ~1% basis). NYMEX:RB1! requires paid TradingView Pro and silently
+      falls back to AAPL on free tier — using the ETF proxy avoids that.</p>
+  </article>
+
+  <article class="panel"><div class="phead"><span class="num">T6B</span><h2>Heating Oil / ULSD Terminal</h2><span class="tag mini">NYMEX HO price + AMEX:UHN chart</span></div>
+    <div class="product-tile">
+      <div class="pt-price-row">
+        <div><b id="heatPrice">—</b><span>NYMEX HO front-month (real Yahoo)</span></div>
+        <div><b id="heatAnchor">—</b><span>Yahoo anchor</span></div>
+      </div>
+      <div id="heatSrc" class="pt-src">—</div>
+    </div>
+    <div class="tv-wrap"><div class="tradingview-widget-container"><div class="tradingview-widget-container__widget" style="height:280px"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+      {"autosize":true,"symbol":"AMEX:UHN","interval":"60","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","toolbar_bg":"#0a0e14","hide_top_toolbar":true,"save_image":false}
+      </script></div></div>
+    <p class="hint">Number above = real NYMEX HO/ULSD front-month futures price (yfinance HO=F).
+      Chart below = AMEX:UHN Heating Oil ETF (free TradingView feed, tracks NYMEX HO).
+      ICE/NYMEX futures (HO1!, UHO1!) require paid TradingView data — they fall back to AAPL on the free embed.</p>
+  </article>
+
+  <article class="panel sim"><div class="phead"><span class="num">T6C</span><h2>Gas Oil Terminal</h2><span class="tag mini">ICE LGO · no free feed</span></div>
+    <div class="product-tile">
+      <div class="pt-price-row">
+        <div><b id="gasoilPrice">paid feed only</b><span>ICE Gas Oil — no free Yahoo equivalent</span></div>
+      </div>
+      <div id="gasoilSrc" class="pt-src">—</div>
+    </div>
+    <div class="tv-wrap"><div class="tradingview-widget-container"><div class="tradingview-widget-container__widget" style="height:280px"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+      {"autosize":true,"symbol":"TVC:UKOIL","interval":"60","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","toolbar_bg":"#0a0e14","hide_top_toolbar":true,"save_image":false}
+      </script></div></div>
+    <p class="hint">ICE Low Sulphur Gas Oil (LGO) is licensed-only on TradingView free tier.
+      Chart below shows Brent (TVC:UKOIL) instead — Gas Oil typically prices at Brent +$5
+      to +$9/bbl as the distillate crack. Use the Brent move as a Gas Oil directional
+      proxy. For real Gas Oil prices, need ICE paid feed or Bloomberg/Reuters terminal.</p>
+  </article>
+
+  <div class="zone-divider">▸ Futures curve structure · calendar spread matrix (current snapshot)</div>
+
+  <article class="panel span3"><div class="phead"><span class="num">T7</span><h2>Calendar Spread Matrix — P(col) − P(row), $/bbl</h2>
+    <span class="tag mini">live, every 3 min</span></div>
+    <div id="curveMatrix" class="covwrap"><!-- filled by JS --></div>
+    <p class="hint">Each cell is the $-difference between the column's contract
+      price and the row's contract price. Green = column richer (contango leg);
+      red = column cheaper (backwardation leg). True covariance would need
+      multi-week historical curve snapshots; this is the structural snapshot.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">T7B</span><h2>Calendar Spread Covariance Matrix ($²/bbl², equal-weighted)</h2>
+    <span id="spreadCovN" class="tag mini">—</span></div>
+    <div id="spreadCovMatrix" class="covwrap"><!-- filled by JS --></div>
+    <p class="hint">Plain sample covariance matrix between consecutive
+      calendar spreads (M1-M2, M2-M3, ..., M11-M12) in $²/bbl² units.
+      <b>Diagonal</b> = sample variance of each spread (= spread vol²).
+      <b>Off-diagonal</b> = pairwise covariance. Equal-weighted across all
+      snapshots, Bessel-corrected (n−1) — the literal covariance matrix in
+      the statistical sense (no EWMA decay). Color: red = positive (spreads
+      co-move), green = negative (anti-correlated, good for fly trades).
+      Adjacent spreads share a common month so they're typically anti-
+      correlated, which is why a butterfly trade
+      (var(fly) = var(M1-M2) + var(M2-M3) − 2·cov(M1-M2, M2-M3)) usually
+      has HIGHER variance than the sum of leg variances — that's the
+      hidden risk in fly structures.</p>
+  </article>
+
+  <div class="zone-divider">▸ Multi-product curves · Brent / RBOB / Heating Oil / NatGas alongside WTI</div>
+
+  <article class="panel span3"><div class="phead"><span class="num">T7C</span><h2>Product Curves — WTI · Brent · RBOB · HO · NatGas (real 12-month settlements)</h2>
+    <span id="productCurvesSrc" class="tag mini">live, every 60s</span></div>
+    <div class="chartwrap"><canvas id="productCurvesChart"></canvas></div>
+    <p class="hint">All four real NYMEX 12-month settlement curves pulled in parallel
+      via yfinance: WTI (CL), Brent (BZ), RBOB Gasoline (RB), Heating Oil (HO),
+      and Natural Gas (NG). Same composition pattern, batched download. Each
+      curve normalized to its M1 = 100 so the SHAPES are comparable on one chart
+      regardless of absolute price level. <b>Backwardation</b> = curve slopes
+      down (tight near-term supply, bullish); <b>contango</b> = slopes up
+      (oversupply, bearish). Distillates (HO) and gasoline (RBOB) often show
+      sharper backwardation than crude during driving / heating season because
+      consumption is concentrated in time.</p>
+  </article>
+
+  <div class="zone-divider">▸ Multi-product strategy matrix · regime · Lasso · technical · combined verdict</div>
+
+  <article class="panel span3"><div class="phead"><span class="num">T7E</span>
+    <h2>Multi-Product Strategy Matrix — Fly + Spreads + Per-Regime Lasso + Technicals</h2>
+    <span id="matrixFitStatus" class="tag mini">—</span></div>
+    <div id="multiProductMatrix" class="multi-prod-matrix"><!-- filled by JS --></div>
+    <p class="hint">
+      For each of the 5 products: classify the curve into 5 regimes
+      (Steep Backwardation / Backwardation / Flat / Contango / Steep Contango)
+      using the M12−M1 slope. Each product has its own cutoffs scaled to its
+      unit ($/bbl, $/gal, $/MMBtu). <b>Fundamental signal</b> = per-product per-regime
+      Lasso (α=0.05) fit on historical fly data with features
+      [fly_now, WTI 5d return, WTI 20d return, DXY 5d return, BB position];
+      Lasso zeroes out factors that don't matter in that regime, so the surviving
+      weights are the macro drivers that actually move that product's fly in that
+      regime. <b>Technical signal</b> = BB position + EMA20/MA50 trend + 5d momentum.
+      <b>Combined verdict</b> = 60% fundamental + 40% technical → LONG/SHORT/WATCH.
+      Position size scales with confidence (1-5 contracts). Geopolitical context per
+      product (OPEC, Hormuz, Russia, summer driving, heating, etc.) shown for
+      operator interpretation — not Lasso inputs.
+    </p>
+  </article>
+
+  <div class="zone-divider">▸ Phase 2 — Regime-based analytical engine · fingerprint · models · opportunities</div>
+
+  <article class="panel span3"><div class="phead"><span class="num">P2A</span>
+    <h2>Current Regime Fingerprint — 5-Dimension Classification</h2>
+    <span id="p2RegimeLabel" class="tag mini">—</span></div>
+    <div id="p2RegimeFingerprint" class="p2-fingerprint"><!-- filled by JS --></div>
+    <p class="hint">Five independent dimensions, each binned into 3-5 buckets.
+      The tuple of bucket labels is the "regime fingerprint" — two markets sharing the same fingerprint should behave similarly.
+      <b>Inventory</b> z vs trailing 60-day.
+      <b>Volatility</b> = z of 20-day realized vol vs trailing 60-day of realized vols.
+      <b>Seasonality</b> from ISO week-of-year (winter heating / spring shoulder / summer driving / fall turnaround).
+      <b>Curve</b> = M12−M1 slope buckets.
+      <b>Macro</b> = DXY 20-day percent change buckets.
+      Historical observations are bucketed by these same definitions, so the
+      <i>regime fingerprint</i> is both the classification and the lookup key.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">REGIME</span>
+    <h2>Per-Product Percentile Regime — quintile labels from each product's own slope history</h2>
+    <span id="pctRegimeStatus" class="tag mini">—</span></div>
+    <div id="pctRegimeTable" class="pr-table"><!-- filled by JS --></div>
+    <p class="hint">Each product's M12-M1 slope distribution gets its own
+      20/40/60/80 percentile cutoffs — so <b>Q1</b> means "in the bottom 20%
+      of this product's slope history" (deepest backwardation FOR THIS PRODUCT),
+      and <b>Q5</b> means top 20% (deepest contango). Shown alongside the
+      legacy hard-cutoff label (Steep Back / Back / Flat / Contango / Steep
+      Contango) — those cutoffs were calibrated for WTI in $/bbl and produce
+      90%+ class imbalance on LGO ($/mt) and HO ($/gal). When the two schemes
+      <b>disagree</b>, the percentile label is the more meaningful one for that
+      product. NO ML used — pure labeling.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">PSTRAT</span>
+    <h2>Paper Strategies — PCA Curve / Bertram OU / HMM Regime (winners of the shootout)</h2>
+    <span id="pstratStatus" class="tag mini">—</span></div>
+    <div id="pstratTable" class="ps-table"><!-- filled by JS --></div>
+    <p class="hint">Backtested winners of the 6-way shootout (PCA Curve + 5 published
+      papers). <b>PCA Curve</b> auto-trades CL/LCO/LGO via the 3-tenor PC3 fly when
+      |PC3 z| ≥ 2. <b>Bertram OU</b> trades HO calendar spreads when deviation
+      crosses the OU-derived a* threshold. <b>HMM Regime</b> trades the WTCL log
+      spread when posterior regime probability > 0.7 AND |z| > 1. Combined OOS Sharpe
+      averaged across products: ~2.5. Auto-traded as <i>source=pstrat</i> with
+      1.5% stop / 72h time-stop / +3% take-profit. <b>MONITOR</b> tier shows current
+      readings even when no trade fires.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">BPP</span>
+    <h2>Best-Per-Product Strategy — each product trades only its specialist model</h2>
+    <span id="bppStatus" class="tag mini">—</span></div>
+    <div id="bppTable" class="bpp-table"><!-- filled by JS --></div>
+    <p class="hint">For each product, the model family that wins the MOST targets in
+      the 138-target backtest gets the steering wheel. We only show signals where
+      that specialist model was the winner AND test R² ≥ 0.10. Up to 3 trades per
+      product (caps single-product concentration). Auto-traded as
+      <i>source=bestpp</i> in the paper book (1.8% stop / 96h time-stop / +3.5% take-profit).</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">FUSION</span>
+    <h2>Composite Strategy — multi-factor weighted signal (regression + LGBM + technical + news + regime + macro)</h2>
+    <span id="compositeStatus" class="tag mini">—</span></div>
+    <div id="compositeTable" class="cm-table"><!-- filled by JS --></div>
+    <p class="hint">Fuses every working engine on the dashboard into ONE per-product verdict.
+      Each engine votes <b>−1 / 0 / +1</b>. Composite score = weighted sum (weights: real-data 25%,
+      live LGBM 20%, technical 15%, news 10%, regime 10%, macro 10%, regression 10%). Verdict:
+      <b>LONG</b> if score ≥ +0.30, <b>SHORT</b> if ≤ −0.30, else FLAT. HIGH conviction at
+      |score| ≥ 0.50 (3 lots), MED at ≥ 0.30 (2 lots). HIGH/MED verdicts are <b>auto-traded</b>
+      as <i>source=composite</i> in the paper book (2% stop / 96h time-stop / +4% take-profit).</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">REAL</span>
+    <h2>Real-Curve Signals — your CL/LCO/LGO/HO/WTCL M1-M14 (LGBM/XGBoost/Huber + 60/20/20)</h2>
+    <span id="realDataStatus" class="tag mini">—</span></div>
+    <div id="realDataTable" class="rd-table"><!-- filled by JS --></div>
+    <p class="hint">Trained on your 5 uploaded xlsx files (~1,500-1,750 daily bars per product,
+      M1-M14 curves). 60/20/20 chronological split (train/val/test).
+      6 model families tested per target (Linear, Ridge, Lasso, ElasticNet, Huber,
+      LGBM, XGBoost); winner is the one with the highest <i>validation</i> R²
+      and the displayed test R² is fully out-of-sample. Macro features (REAL,
+      no synthetic): lagged returns, DXY 5d, 20d realized vol, curve slope (M12-M1),
+      curve curvature (M3-2M6+M9). HIGH confidence = test R² ≥ 0.30 (rare,
+      real edge). MED = 0.10-0.30. LOW = 0.05-0.10. NOISE = below 0.05 (hidden).
+      <b>Working-effect tag</b>: weighted_mid pricing on flies/spreads can introduce
+      mechanical mean reversion (Working 1960). When the underlying series has
+      lag-1 diff autocorrelation worse than &minus;0.05, we show <span class="we-mild">⚠ WE</span>
+      next to R² and the haircut-R² (live realistic value). <span class="we-clean">✓ clean</span>
+      means the signal is fully tradable. Tip: LGO and LGBM-fitted outrights are
+      typically clean; CL/LCO flies tend to carry a 20-35% mechanical haircut.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">LIVE</span>
+    <h2>Trading Signals — 5 products + 3 spreads (LGBM, next-5d outlook)</h2>
+    <span id="liveSignalsStatus" class="tag mini">—</span></div>
+    <div id="liveSignalsTable" class="ls-table"><!-- filled by JS --></div>
+    <p class="hint">Live signal stack from 5-year daily LGBM fits on each product
+      and three desk spreads (WTI−Brent, 321Crack proxy, RBOB−HO). Signal =
+      <b>LONG</b> if predicted next-5d move &gt; +0.5% (or threshold for
+      spreads), <b>SHORT</b> if &lt; −0.5%, else <b>FLAT</b>. Confidence tier
+      (HIGH/MED/LOW) reflects each strategy's out-of-sample historical Sharpe
+      and win rate — HIGH means the model has earned its trust on past data,
+      LOW means take with a grain of salt. Refits every 6 hours.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">P2B</span>
+    <h2>Regression Model Comparison — Linear / Ridge / Lasso / ElasticNet / Huber / LGBM (per regime)</h2>
+    <span id="p2ModelStatus" class="tag mini">—</span></div>
+    <div id="p2ModelTable" class="p2-model-table"><!-- filled by JS --></div>
+    <p class="hint">For each curve regime with sufficient observations
+      (n ≥ 5), we fit 6 regression families on (features → next-tick fly):
+      LinearRegression (baseline), Ridge α=1.0 (L2), Lasso α=0.05 (L1, sparse),
+      ElasticNet α=0.05 / l1_ratio=0.5 (blend), Huber (robust to outliers),
+      and LGBM (gradient-boosted trees, captures non-linearities the linear
+      families cannot). Reported: train R², out-of-sample test R² on last 20%,
+      MAE, and # non-zero coefficients (for LGBM, # features with non-zero
+      split gain). <b>Winner</b> per regime = highest test R². The exercise
+      isn't to find one universal model; it's to surface which family
+      <i>wins where</i>. Features: [fly_now, WTI 5d/20d return, DXY 5d return,
+      BB position, inventory-z, vol-z, slope].</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">P2C</span>
+    <h2>Ranked Analytical Opportunities — regime-conditional deviations</h2>
+    <span id="p2OppCount" class="tag mini">—</span></div>
+    <div id="p2OpportunityTable" class="p2-opp-table"><!-- filled by JS --></div>
+    <p class="hint">For every (product × structure) pair — 5 products × 5 structures
+      (fly, M1-M2, M3-M6, M6-M9, slope) — we compute the deviation of the live value
+      from its <i>regime-conditional</i> historical mean. Each comparison uses
+      the per-dimension stats from the Phase 2 historical database. Score =
+      |average z| × confidence (log-scaled by sample size) × robustness
+      (1 − std of z's across dimensions; high when the deviation is
+      consistent across all 5 lenses, low when it's only signaled by one).
+      Ranked top-N shown.
+      <b>WTI</b> rows have full regime-conditional stats from rolling
+      `curve_hist`; other products surface current values only until their
+      curve history accumulates.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">P2D</span>
+    <h2>Historical Regime Database — per-dimension summary</h2>
+    <span id="p2DbStatus" class="tag mini">—</span></div>
+    <div id="p2HistoryTable" class="p2-hist-table"><!-- filled by JS --></div>
+    <p class="hint">Per-dimension bucketed stats: for each of the 5 dimensions,
+      walks every historical curve snapshot, assigns it to a bucket, and
+      summarizes the distribution of fly / M1-M2 / M3-M6 / M6-M9 / slope
+      within each bucket — count n, mean, std, 10/50/90 quantiles. The
+      "what's typical here" reference set used by the Opportunity Engine.
+      Refresh every 5 min.</p>
+  </article>
+
+  <div class="zone-divider">▸ Phase 3 · Full-strip term-structure regression · 5 products × 25 spreads &amp; flies · 10 model families · trained &le; 15 Mar 2026, verified Mar–May 2026</div>
+
+  <article class="panel span3"><div class="phead"><span class="num">P3A</span>
+    <h2>Term-Structure Model Quality — out-of-sample R² per product</h2>
+    <span id="tsQuality" class="tag mini">—</span></div>
+    <div id="tsQualityGrid" class="ts-quality-grid"><!-- filled by JS --></div>
+    <p class="hint">For each product, the strongest 10 of the 25 (spread + fly)
+      level models, ordered by their best out-of-sample R². Green ≥ 0.70 (high
+      confidence), gold 0.50–0.70 (medium), orange 0.30–0.50 (low), red &lt; 0.30
+      (noise — not actionable). Models used: OLS, Ridge, <b>Lasso</b>, ElasticNet,
+      <b>Huber</b> (robust to fat tails — best on most calendar spreads), KNN,
+      RandomForest, GradBoost. <b>WTI–Brent</b> and <b>Gasoil</b> are verified
+      live on Mar–May 2026 out-of-sample data; CL, Brent-3y, HO use an in-era
+      80/20 holdout. <b>Predictor correction:</b> spread-level models that
+      previously scored a fake R²≈1 from same-day leakage were rebuilt using
+      lagged-only inputs, dropping to honest ≈0.7–0.9.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">P3B</span>
+    <h2>Cross-Product Top Trade Ideas — ranked by |z| × R²</h2>
+    <span id="tsCrossTopCount" class="tag mini">—</span></div>
+    <div id="tsCrossTopTable" class="ts-top-table"><!-- filled by JS --></div>
+    <p class="hint">Highest-conviction trades across all 5 products.
+      z = (actual − predicted) / RMSE. Strong +z = spread is <i>rich vs the
+      model</i> → SHORT it (mean-revert down). Strong −z = cheap → LONG it.
+      <b>Lots = round(clip(|z| × R² × 2.5, 1, 5))</b> — sizing weights model
+      confidence into the position. Only structures with R² ≥ 0.30 generate
+      actionable trades; everything else is shown in P3C as WATCH-only.
+      <b>Direction colors:</b> green = LONG, red = SHORT, grey = WATCH.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">P3C</span>
+    <h2>Regime-Wise Trade Book — per product, current regime + best ideas</h2>
+    <span id="tsRegimeCount" class="tag mini">—</span></div>
+    <div id="tsByProduct" class="ts-by-product"><!-- filled by JS --></div>
+    <p class="hint">Each product card shows: (1) its current curve <b>regime</b>
+      classified from the live M1–M12 slope (steep_backwardation /
+      backwardation / flat / contango / steep_contango); (2) the top 5 trade
+      ideas across its calendar spreads and flies, with model name, R²,
+      direction, lot size and the rationale (z-score). Per-product trades are
+      grouped by the regime the product is currently in — so under a contango
+      regime, all WTI spreads / flies that the models flag as mispriced get
+      surfaced together as one coherent regime trade book.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">P3D</span>
+    <h2>Full Strip — every spread &amp; fly, every product, level + change models</h2>
+    <span id="tsFullCount" class="tag mini">—</span></div>
+    <div id="tsFullTable" class="ts-full-table"><!-- filled by JS --></div>
+    <p class="hint">The raw model deck. One row per (product, structure, kind):
+      spread or fly, level or next-day change. Click a product to filter.
+      <b>Level</b> models trade rich/cheap mean-reversion on the spread itself.
+      <b>Change</b> models attempt to predict the next-day move — far harder, so
+      R² is mostly &lt; 0.3 (the financially honest result: daily changes of
+      spreads are close to a random walk). Where a change-model R² is high
+      (e.g. WTCL M3–M4 change at 0.41 from Huber), it's a real timing edge.</p>
+  </article>
+
+  <div class="zone-divider">▸ Phase 3 · Technical analysis · independent per-product trade verdicts (second opinion vs the regression engine)</div>
+
+  <div class="zone-divider">▸ Phase 6 · Strategy backtest — TA / TA+seasonality / Buy&amp;Hold over the same train/verify split as the regression engine</div>
+
+  <article class="panel span3"><div class="phead"><span class="num">P6</span>
+    <h2>Strategy Backtest — in-sample vs out-of-sample (mirrors P3B's split)</h2>
+    <span id="p6Meta" class="tag mini">—</span></div>
+    <div id="p6Table" class="p6-table"><!-- filled by JS --></div>
+    <p class="hint">Walk-forward backtest of the three rule-based engines
+      currently shipping on the dashboard, applied to <b>5 years of real Yahoo
+      daily OHLC</b> with 10 bps round-trip cost on $100k. The split is
+      <b>15 Mar 2026</b> — same boundary the user used to train and verify the
+      regression models (P3B). The TA strategy is identical in both windows
+      (no parameters are fitted) — the comparison shows whether the same
+      fixed rules that worked historically continue to work on the most
+      recent ~3 months. Per-row metrics: trades, win rate, total P&amp;L,
+      max drawdown, Sharpe. Green return = positive, red = negative. The
+      <i>out_of_sample</i> sample size is small (5-18 trades depending on
+      product) so single-period results should not be over-weighted; the
+      meaningful comparison is "did the strategy survive the OOS window or
+      blow up?"</p>
+  </article>
+
+  <div class="zone-divider">▸ Phase 5 · News-aware trade signals · FinBERT sentiment × keyword routing × z-score fusion</div>
+
+  <article class="panel span3"><div class="phead"><span class="num">P5</span>
+    <h2>News-Aware Trade Signals — sentiment fused with BB / fly z-scores</h2>
+    <span id="p5Count" class="tag mini">—</span></div>
+    <div id="p5Table" class="p5-table"><!-- filled by JS --></div>
+    <p class="hint">For each oil-complex product the engine routes recent news
+      (last 24h) via headline keyword matching, scores each headline with
+      <b>FinBERT</b> (preferred) or VADER (fallback), adds a ±impact bias for
+      supply-shock / weak-demand keywords, and aggregates to a single
+      <b>news vote</b> per product. That vote is then summed with a
+      <b>z-score vote</b> built from the dashboard's existing BB position
+      and fly z. Combined vote in [−2, +2] maps to LONG/SHORT/HOLD with
+      conviction tier and lot sizing. Entry / TP / SL use the same
+      vol-banded formula as P3F and P4D (TP = entry + dir × 2σ × √5,
+      SL = entry − dir × 1.5σ → R:R ≈ 2.98:1). Each product row expands
+      to show the top 3 highest-|score| headlines that moved the verdict
+      and the exact bull/bear/neutral counts.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">P3F</span>
+    <h2>Per-Product Trade Plan — buy/sell + entry / TP / SL with lot sizing</h2>
+    <span id="taPlanCount" class="tag mini">—</span></div>
+    <div id="taPlanTable" class="ta-plantable"><!-- filled by JS --></div>
+    <p class="hint">For each of the 5 oil-complex front-month products: the TA
+      engine's direction call (LONG / SHORT / HOLD), suggested lot size, and a
+      concrete trade plan derived from <b>20-day realized log-return vol</b>:
+      <br>• <b>Entry</b> = current price · <b>σ_$ = |price| × vol₂₀</b> (1-day $ std)
+      <br>• <b>Take Profit</b> = entry + dir × 2σ × √5 (a 5-day 2-sigma favorable move)
+      <br>• <b>Stop Loss</b> = entry − dir × 1.5σ (1-day 1.5-sigma adverse)
+      <br>• <b>R:R</b> ≈ 2√5 / 1.5 = 2.98:1 by construction. Lots auto-halved
+      when daily vol &gt; 5% (high-stress regimes). Same vol-banded TP/SL
+      formula as panel P4D so trade plans are comparable across the regime
+      and TA engines.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">P3E</span>
+    <h2>Technical-Analysis Trade Verdict — RSI · BB · EMA-cross · Momentum</h2>
+    <span id="taCount" class="tag mini">—</span></div>
+    <div id="taPanel" class="ta-panel"><!-- filled by JS --></div>
+    <p class="hint">Each product gets four equal-weight TA sub-signals voting
+      −1 / 0 / +1: <b>RSI(14)</b> (oversold &lt;30 = long, overbought &gt;70 =
+      short), <b>BB(20, 2σ)</b> (price below lower band = long), <b>EMA(20/50)
+      crossover</b> (20&gt;50 = trend long), <b>SMA(20) momentum</b> (price
+      above SMA = long). Raw sum lives in [−4, +4]. <b>|raw| ≥ 2 → trade</b>
+      with <b>lots = min(5, max(1, |raw|))</b>; otherwise HOLD (signals
+      mixed). This is intentionally independent of the regression / regime
+      engines so it serves as a second opinion you can override or stack
+      with. Confidence % = fraction of the 4 sub-signals aligned with the
+      verdict direction.</p>
+  </article>
+
+  <div class="zone-divider">▸ Phase 4 · Persistent regime detection · HMM vs GMM vs KMeans fit-off across ~1,550 daily bars (2021–2026) · seasonality decomposition</div>
+
+  <article class="panel span3"><div class="phead"><span class="num">P4A</span>
+    <h2>Method Fit-Off — which regime classifier should you trust?</h2>
+    <span id="p4Winner" class="tag mini">—</span></div>
+    <div id="p4MethodGrid" class="p4-methodgrid"><!-- filled by JS --></div>
+    <p id="p4Verdict" class="hint" style="margin-top:10px">—</p>
+    <p class="hint">Three families fit on the same feature stack (log-return, 20d
+      realized vol, M1–M12 spread, M3–2M6+M9 fly). <b>HMM (Gaussian emissions)</b>
+      models the time-ordered SEQUENCE and penalizes transitions — gives
+      persistent, tradeable regimes. <b>GMM</b> is probabilistic clustering with
+      no time dependence — relabels every time features drift across a cluster
+      boundary, so it flickers (LGO: 91 switches, WTCL: 277 switches in ~1,550
+      bars = quasi-weekly flips). <b>KMeans</b> wins silhouette because it
+      optimizes cluster tightness, but ignores time. <b>Persistence</b> (HMM
+      only) is Pr(state[t+1] = state[t]) — when this is &gt;0.95 you can
+      hold a regime trade without getting bounced out by noise.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">P4B</span>
+    <h2>HMM State Characteristics — what each persistent regime actually means</h2>
+    <span id="p4StateCount" class="tag mini">—</span></div>
+    <div id="p4StateGrid" class="p4-stategrid"><!-- filled by JS --></div>
+    <p class="hint">Each HMM state is a Gaussian cluster in (return, vol, spread, fly)
+      space, but tied together by the persistence prior. The signature columns
+      show what each state <i>looks like</i>: mean log-return, mean 20-day
+      realized vol, mean curve spread. <b>Calm + tight vol + sign of spread</b>
+      ≈ a backwardation or contango regime; <b>high vol + extreme spread</b>
+      ≈ a stress / dislocation regime. Share = % of history spent in that state.
+      "Now" highlights the regime classified at the last training bar.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">P4C</span>
+    <h2>STL Seasonality — calendar-driven layer separate from regimes</h2>
+    <span id="p4SeasCount" class="tag mini">—</span></div>
+    <div id="p4SeasonalityGrid" class="p4-seasonality"><!-- filled by JS --></div>
+    <p class="hint">Seasonal-trend-loess decomposition isolates the recurring
+      calendar component (positive bars = month is seasonally rich, negative =
+      seasonally cheap). <b>Strength</b> ≈ 0–1 ratio of seasonal variance to
+      total variance; near 0.1 means seasonality is weak — expected for global
+      benchmarks where storage arbitrage smooths the front month. Regime and
+      seasonality are deliberately separate layers — regimes answer "what
+      state are we in <i>now</i>?" while seasonality answers "what does this
+      time of year usually do?". Both can be true at once.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">P4D</span>
+    <h2>Regime + Seasonality Trade Signals — buy/sell per product with lot sizing</h2>
+    <span id="p4SignalCount" class="tag mini">—</span></div>
+    <div id="p4SignalTable" class="p4-signaltable"><!-- filled by JS --></div>
+    <p class="hint">Combines two independent votes per product into one verdict:
+      (1) <b>Regime drift vote</b> — sign of the current HMM state's mean log-return,
+      weighted by persistence (98%+ for LGO, 95%+ for WTCL = high conviction);
+      (2) <b>Seasonality vote</b> — sign of the current calendar month's STL
+      component (negative = seasonally cheap → LONG, positive = seasonally rich
+      → SHORT). When both votes agree, conviction is HIGH and lots scale up to
+      5. When they disagree, the stronger weighted vote wins but lots are
+      capped at 2. When the regime is high-vol (vol20 &gt; 5%), lots are
+      automatically halved — small position in stress regimes. Each row
+      explains the why, the asset to actually trade, and the suggested
+      direction × size.</p>
+  </article>
+
+  <div class="zone-divider">▸ Commodity correlation matrix · daily returns over the last ~1y</div>
+
+  <article class="panel span3"><div class="phead"><span class="num">T7D</span><h2>Commodity Correlation Matrix — daily returns (Pearson, 1y)</h2>
+    <span id="commCorrN" class="tag mini">—</span></div>
+    <div id="commCorrMatrix" class="covwrap"><!-- filled by JS --></div>
+    <p class="hint">Real correlation of <b>daily returns</b> across our six
+      tracked oil-complex series: WTI, Brent, RBOB, Heating Oil, DXY, and
+      Natural Gas. Built from ~250 trading days of real yfinance daily closes.
+      Diagonal = 1.0 (a series perfectly correlates with itself). Expected
+      structure: WTI ↔ Brent very high (~0.95, same physical underlying),
+      products ↔ crude high (~0.8-0.9, refining chain), DXY ↔ crude
+      <i>negative</i> (~-0.3 to -0.5, dollar strength typically inversely
+      tracks oil), NatGas ↔ crude low (~0.1-0.3, NatGas trades on its own
+      weather/storage cycle, not crude fundamentals). Anything that breaks
+      these structural relationships is a real regime-shift signal.</p>
+  </article>
+
+  <div class="zone-divider">▸ Analyst watch · Google News mentions + VADER sentiment
+    <span style="color:var(--dim);text-transform:none;letter-spacing:.5px;margin-left:8px">
+      (Twitter API is $100+/mo since 2023 — using news mentions as the free proxy)
+    </span>
+  </div>
+
+  <article class="panel span3"><div class="phead"><span class="num">T8</span><h2>Analyst Watch</h2></div>
+    <div id="analystNews" class="analyst-grid"><!-- filled by JS --></div>
+  </article>
+
+  <div class="zone-divider">▸ Seasonality · refinery utilization vs 5y norm + market calendar</div>
+
+  <article class="panel span3"><div class="phead"><span class="num">T9</span><h2>Refinery Utilization Seasonality</h2>
+    <span id="seasonPhase" class="tag">—</span>
+    <span id="seasonNext" class="tag mini">—</span>
+    <span id="seasonHurricane" class="tag mini"></span></div>
+    <div class="stats3">
+      <div><b id="seasonNow">—</b><span>this week's utilization</span></div>
+      <div><b id="seasonNorm">—</b><span>5y week-of-year normal</span></div>
+      <div><b id="seasonDev">—</b><span>deviation (σ)</span></div>
+    </div>
+    <div class="chartwrap"><canvas id="seasonChart"></canvas></div>
+    <p class="hint">Real-time refinery outage data is paid-only (IIR/Genscape).
+      Instead, this shows the 5-year week-of-year average of US refinery
+      utilization vs this year's actuals. When current readings dip well
+      below the seasonal norm in spring (weeks 9–16) or fall (weeks 36–44),
+      heavy turnaround is underway — historically bullish for product cracks.</p>
+  </article>
+
+  <div class="zone-divider">▸ Global cyclone watch · NOAA NHC + JTWC overlaid on 63 refineries across 12 regions</div>
+
+  <article class="panel span3"><div class="phead"><span class="num">T11</span><h2>Global Cyclone Watch — 6 basins · 63 refineries · 20.9 Mbpd</h2>
+    <span id="stormStatus" class="tag mini">—</span>
+    <span id="stormSrc" class="tag mini">—</span></div>
+    <div id="stormList" class="storm-list"><!-- filled by JS --></div>
+    <p class="hint">Global tropical-cyclone tracker pulling from two free
+      sources: <b>NOAA NHC</b> (CurrentStorms.json — AL Atlantic + EP Eastern
+      Pacific + CP Central Pacific) and <b>JTWC</b> (RSS + warning text
+      bulletins — WP Western Pacific typhoons + NI North Indian Ocean
+      cyclones + SH Southern Hemisphere). Each storm is basin-tagged and
+      distance-checked only against refineries in regions exposed to that
+      basin (a Western Pacific typhoon doesn't get checked vs Texas
+      refineries). 12 regions, 63 refineries, ~20.9 Mbpd combined =
+      roughly half of global refining capacity. Refinery shut = bullish
+      products / bearish crude. Offshore production shut (Atlantic only)
+      = bullish crude. Each storm's regions-at-risk badges show which
+      regions' assets are within 150 nm.</p>
+  </article>
+
+  <div class="zone-divider">▸ Strategic choke point watch · live AIS counts at the world's 7 oil maritime bottlenecks
+    <span style="color:var(--dim);text-transform:none;letter-spacing:.5px;margin-left:8px">
+      (caveat: dark fleet turns off AIS — visible flow only)
+    </span>
+  </div>
+
+  <article class="panel span3"><div class="phead"><span class="num">T12</span><h2>Choke Point Watch — visible oil flow at maritime bottlenecks</h2>
+    <span id="chokeStatus" class="tag mini">—</span>
+    <span id="chokeTotals" class="tag mini">—</span></div>
+    <div id="chokePoints" class="choke-grid"><!-- filled by JS --></div>
+    <p class="hint">Each card now shows <b>actual 24-hour throughput</b>
+      derived from confirmed-tanker entries and exits at the choke, weighted
+      by per-vessel size class (VLCC/Suezmax/Aframax/Panamax/Product, classified
+      from AIS dimensions). <b>vs baseline</b> = throughput as % of EIA's
+      annual average for that passage. <b>Laden / ballast</b> = inferred from
+      AIS reported draught (≥11 m → laden). Honest limitations: dark fleet
+      turns off AIS to evade; Hormuz Iran-side coverage gappy from jamming;
+      vessel size classification needs the ShipStaticData message (broadcast
+      every 6 min) so newly-arrived vessels start as Small/Unknown.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">T13</span><h2>Floating Storage Detection — tankers anchored &gt;2 days at hubs</h2>
+    <span id="floatingStatus" class="tag mini">—</span></div>
+    <div id="floatingStorage" class="floating-grid"><!-- filled by JS --></div>
+    <p class="hint">Tankers continuously anchored at one of our 10 zones for
+      more than 2 days are flagged as floating-storage candidates — they're
+      likely waiting to discharge or being used as temporary storage. A
+      rising count is a <b>bullish supply-side signal</b> (oil stored at sea
+      rather than refined immediately). 7 traditional hubs + 3 dark-fleet STS
+      zones (Lakonikos, Ceuta, Sohar) where sanctioned crude is held.
+      Capacity-weighted total at the bottom gives an aggregate "barrels
+      floating" estimate.</p>
+  </article>
+
+  <article class="panel span3"><div class="phead"><span class="num">T14</span><h2>STS Rendezvous Candidates — possible ship-to-ship transfers</h2>
+    <span id="stsStatus" class="tag mini">—</span></div>
+    <div id="stsCandidates" class="sts-grid"><!-- filled by JS --></div>
+    <p class="hint">Two confirmed tankers within 600 m of each other AND both
+      moving slower than 1.5 knots inside the same zone — a strong signature
+      of ship-to-ship cargo transfer. STS is commonly used to obscure cargo
+      origin (Russian Urals/ESPO + Iranian crude transferred to "clean"
+      vessels). Now scans 5 STS-relevant zones: Fujairah, Singapore/Malacca,
+      Lakonikos Gulf, Ceuta (Gibraltar), and Sohar (Oman) — the last three
+      are the primary dark-fleet zones since the EU price-cap regime.</p>
+  </article>
+
+  <div class="zone-divider">▸ Tanker watch · live AIS positions at major oil hubs
+    <span style="color:var(--dim);text-transform:none;letter-spacing:.5px;margin-left:8px">
+      (aisstream.io free tier — terrestrial coverage ~40 mi from shore)
+    </span>
+  </div>
+
+  <article class="panel span3"><div class="phead"><span class="num">T10</span><h2>Tanker Watch — Live AIS</h2>
+    <span id="aisStatus" class="tag mini">connecting…</span>
+    <span id="aisTotals" class="tag mini">—</span></div>
+    <div id="tankerZones" class="tanker-grid"><!-- filled by JS --></div>
+    <p class="hint">Headline number = <b>confirmed tankers only</b> (AIS
+      ShipStaticData ship-type code 80-89). Bounding boxes are deliberately
+      tight around real petroleum terminals + anchorages — they exclude
+      container/ferry/general port traffic. "Total vessels in box" is shown
+      for transparency but includes non-tankers and tankers whose static
+      data hasn't arrived yet (broadcast every ~6 min). Anchored tanker
+      counts at Singapore/Fujairah/Rotterdam hubs are the physical-oil-trader
+      proxy for port congestion and floating storage. Free aisstream.io tier
+      is terrestrial-only (~40 mi from shore), so LOOP/Saldanha/offshore
+      zones often show zero — that's a coverage limit, not absence of ships.</p>
+  </article>
+
+</main>
+
+<footer class="footer">
+  Live data over WebSocket · 5-zone layout · dashed border = simulated panel ·
+  <span id="tickInfo">tick 0</span>
+</footer>
+
+<script src="/app.js?v=20260610e-we-flag"></script>
+</body>
+</html>

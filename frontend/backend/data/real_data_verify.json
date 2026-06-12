@@ -1,0 +1,210 @@
+{
+  "available": true,
+  "checked": 86,
+  "matched": 49,
+  "match_pct": 57.0,
+  "samples": [
+    {
+      "product": "LGO",
+      "struct": "SPR_1_2",
+      "date": "2026-05-20",
+      "file_value": 23.875,
+      "dashboard_act": 23.875,
+      "abs_diff": 0.0,
+      "pct_diff": 0.0,
+      "match": true
+    },
+    {
+      "product": "LGO",
+      "struct": "SPR_2_3",
+      "date": "2026-05-20",
+      "file_value": 55.1,
+      "dashboard_act": 55.1,
+      "abs_diff": 0.0,
+      "pct_diff": 0.0,
+      "match": true
+    },
+    {
+      "product": "LGO",
+      "struct": "SPR_3_4",
+      "date": "2026-05-20",
+      "file_value": 45.7136,
+      "dashboard_act": 45.714,
+      "abs_diff": -0.0004,
+      "pct_diff": 0.0,
+      "match": true
+    },
+    {
+      "product": "LGO",
+      "struct": "SPR_4_5",
+      "date": "2026-05-20",
+      "file_value": 34.1989,
+      "dashboard_act": 34.199,
+      "abs_diff": -0.0001,
+      "pct_diff": 0.0,
+      "match": true
+    },
+    {
+      "product": "LGO",
+      "struct": "SPR_5_6",
+      "date": "2026-05-20",
+      "file_value": 40.6125,
+      "dashboard_act": 40.613,
+      "abs_diff": -0.0005,
+      "pct_diff": 0.0,
+      "match": true
+    },
+    {
+      "product": "LGO",
+      "struct": "SPR_6_7",
+      "date": "2026-05-20",
+      "file_value": 42.325,
+      "dashboard_act": 42.325,
+      "abs_diff": 0.0,
+      "pct_diff": 0.0,
+      "match": true
+    },
+    {
+      "product": "LGO",
+      "struct": "SPR_7_8",
+      "date": "2026-05-20",
+      "file_value": 24.875,
+      "dashboard_act": 24.875,
+      "abs_diff": 0.0,
+      "pct_diff": 0.0,
+      "match": true
+    },
+    {
+      "product": "LGO",
+      "struct": "SPR_8_9",
+      "date": "2026-05-20",
+      "file_value": 19.9375,
+      "dashboard_act": 19.938,
+      "abs_diff": -0.0005,
+      "pct_diff": 0.0,
+      "match": true
+    },
+    {
+      "product": "LGO",
+      "struct": "SPR_9_10",
+      "date": "2026-05-20",
+      "file_value": 19.0625,
+      "dashboard_act": 19.063,
+      "abs_diff": -0.0005,
+      "pct_diff": 0.0,
+      "match": true
+    },
+    {
+      "product": "LGO",
+      "struct": "SPR_10_11",
+      "date": "2026-05-20",
+      "file_value": 19.5536,
+      "dashboard_act": 19.554,
+      "abs_diff": -0.0004,
+      "pct_diff": 0.0,
+      "match": true
+    }
+  ],
+  "mismatches": [
+    {
+      "product": "WTCL",
+      "struct": "FLY_5_6_7",
+      "date": "2026-05-12",
+      "file_value": -0.0016,
+      "dashboard_act": -0.002,
+      "abs_diff": 0.0004,
+      "pct_diff": 18.48,
+      "match": false
+    },
+    {
+      "product": "WTCL",
+      "struct": "FLY_8_9_10",
+      "date": "2026-05-12",
+      "file_value": -0.0133,
+      "dashboard_act": -0.013,
+      "abs_diff": -0.0003,
+      "pct_diff": 2.56,
+      "match": false
+    },
+    {
+      "product": "CL",
+      "struct": "SPR_1_2",
+      "date": "2022-05-24",
+      "file_value": 2.5883,
+      "dashboard_act": 2.691,
+      "abs_diff": -0.1027,
+      "pct_diff": 3.82,
+      "match": false
+    },
+    {
+      "product": "CL",
+      "struct": "SPR_2_3",
+      "date": "2022-05-24",
+      "file_value": 2.7683,
+      "dashboard_act": 2.915,
+      "abs_diff": -0.1467,
+      "pct_diff": 5.03,
+      "match": false
+    },
+    {
+      "product": "CL",
+      "struct": "SPR_3_4",
+      "date": "2022-05-24",
+      "file_value": 2.5507,
+      "dashboard_act": 2.678,
+      "abs_diff": -0.1273,
+      "pct_diff": 4.75,
+      "match": false
+    },
+    {
+      "product": "CL",
+      "struct": "SPR_4_5",
+      "date": "2022-05-24",
+      "file_value": 2.1893,
+      "dashboard_act": 2.33,
+      "abs_diff": -0.1407,
+      "pct_diff": 6.04,
+      "match": false
+    },
+    {
+      "product": "CL",
+      "struct": "SPR_5_6",
+      "date": "2022-05-24",
+      "file_value": 1.9017,
+      "dashboard_act": 1.965,
+      "abs_diff": -0.0633,
+      "pct_diff": 3.22,
+      "match": false
+    },
+    {
+      "product": "CL",
+      "struct": "SPR_6_7",
+      "date": "2022-05-24",
+      "file_value": 1.6917,
+      "dashboard_act": 1.73,
+      "abs_diff": -0.0383,
+      "pct_diff": 2.22,
+      "match": false
+    },
+    {
+      "product": "CL",
+      "struct": "SPR_11_12",
+      "date": "2022-05-24",
+      "file_value": 0.999,
+      "dashboard_act": 0.955,
+      "abs_diff": 0.044,
+      "pct_diff": 4.61,
+      "match": false
+    },
+    {
+      "product": "CL",
+      "struct": "FLY_1_2_3",
+      "date": "2022-05-24",
+      "file_value": -0.18,
+      "dashboard_act": -0.224,
+      "abs_diff": 0.044,
+      "pct_diff": 19.64,
+      "match": false
+    }
+  ]
+}
