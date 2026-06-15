@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m pip install -q -r requirements.txt)",
+      "Bash(curl -s \"https://Ravish28-oil-trading-desk.hf.space/api/snapshot\")",
+      "Bash(python -c ' *)"
+    ]
+  }
+}

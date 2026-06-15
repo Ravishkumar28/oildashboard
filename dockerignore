@@ -1,0 +1,13 @@
+.env
+.env.*
+.git
+.gitignore
+.dockerignore
+__pycache__
+**/__pycache__
+*.pyc
+.venv
+venv
+.vscode
+.idea
+backend/paper_state.json
